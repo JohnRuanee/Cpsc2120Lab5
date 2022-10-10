@@ -43,6 +43,7 @@ void Stringset::insert(string word){
         }
 
     }
+    num_elems++;
 
     int insert_location = hash(word) % size;
 
