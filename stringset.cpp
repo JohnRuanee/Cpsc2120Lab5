@@ -6,6 +6,7 @@
  */
 
 #include "stringset.h"
+#include <iostream>
 
 Stringset::Stringset() : table(4), num_elems(0), size(4) {}
 
@@ -30,18 +31,24 @@ void Stringset::insert(string word){
 
     std::hash<std::string> hash;
     if(num_elems == size){
-        size = size * 2;
+        size = 8;
         vector<list<string>> temp(size / 2);
         temp = table;
         table.clear();
-        for(int i = 0; i < size / 2; i++){
-            for(int n = 0; n < temp[i].size(); n++){
-                int insert_location = hash(word) % size;
-
-                table[insert_location].push_back(word);
-            }
+        for(int i = 0; i < size; i++){
+            table.push_back({});
         }
 
+        for(int i = 0; i < size / 2; i++){
+            for(int n = 0; n < temp[i].size(); n++){
+                string tempS = temp[i].back();
+                temp[i].pop_back();
+                
+                int insert_location = hash(tempS) % size;
+
+                table[insert_location].push_back(tempS);
+            }
+        }
     }
     num_elems++;
 
@@ -63,17 +70,7 @@ bool Stringset::find(string word) const{
 }
 
 void Stringset::remove(string word){
-    for(int i = 0; i < size; i++){
-        list<string> l;
-        for(int n = 0; n < table[i].size(); n++){
-            if(table[i].back() == word){
-                table[i].pop_back();
-            }else{
-                l.push_back(table[i].back());
-                table[i].pop_back();
-            }
-        }
-        table[i] = l;
-    }
-
+    for(int i = 0; i < size; i++)
+        table[i].remove(word);
+    num_elems--;
 }
