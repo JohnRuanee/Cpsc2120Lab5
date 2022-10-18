@@ -6,6 +6,8 @@
  */
 
 #include "stringset.h"
+ #include <iostream>
+ #include <fstream>
 #include <iostream>
 
 Stringset::Stringset() : table(4), num_elems(0), size(4) {}
@@ -31,7 +33,7 @@ void Stringset::insert(string word){
 
     std::hash<std::string> hash;
     if(num_elems == size){
-        size = 8;
+        size = size * 2;
         vector<list<string>> temp(size / 2);
         temp = table;
         table.clear();
@@ -58,14 +60,15 @@ void Stringset::insert(string word){
 }
 
 bool Stringset::find(string word) const{
-    for(int i = 0; i < size; i++){
-        list<string> l = table[i];
-        for(int n = 0; n < table[i].size(); n++){
-            if(l.back() == word)
-                return true;
-            l.pop_back();
+    std::hash<std::string> hash;
+    
+    for(string str : table[hash(word) % size]){
+        if(word == str){
+            return true;
+            
         }
     }
+    
     return false;
 }
 
@@ -74,3 +77,28 @@ void Stringset::remove(string word){
         table[i].remove(word);
     num_elems--;
 }
+
+ void loadStringset(Stringset& words, string filename)
+ {
+    ifstream infile(filename);
+    string word;
+    while(getline(infile, word)){
+        words.insert(word);
+    }
+ }
+ 
+ vector<string> spellcheck(const Stringset& words, string word)
+ {
+    vector<string> temp;
+    string test;
+
+    for(int i = 0; i < 26; i++){
+        for(int n = 0; n < word.size(); n++){
+            test = word;
+            test[n] = char(i+97);
+            if(words.find(test))
+                temp.push_back(test);
+        }
+    }
+    return temp;
+ }

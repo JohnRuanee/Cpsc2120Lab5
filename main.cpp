@@ -76,27 +76,3 @@
      } while (choice[0] != 'Q' && choice[0] != 'q');
  }
  
- void loadStringset(Stringset& words, string filename)
- {
-    ifstream infile(filename);
-    string word;
-    while(getline(infile, word)){
-        words.insert(word);
-    }
- }
- 
- vector<string> spellcheck(const Stringset& words, string word)
- {
-    vector<string> temp;
-    string test;
-
-    for(int i = 0; i < 26; i++){
-        for(int n = 0; n < word.size(); n++){
-            test = word;
-            test[n] = char(i+97);
-            if(words.find(test))
-                temp.push_back(test);
-        }
-    }
-    return temp;
- }
