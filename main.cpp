@@ -94,8 +94,8 @@
         for(int n = 0; n < word.size(); n++){
             test = word;
             test[n] = char(i+97);
-            cout << words.find(test) << endl;
-            if(words.find(test))
+            
+            if(words.find(test) && test != word)
                 temp.push_back(test);
         }
     }
